@@ -42,14 +42,44 @@ int main()
             throw string("Erreur modbus_read_registers : ") + modbus_strerror(errno);
         }
         
-        cout << "\n=== DONNEES LUES ===\n";
+        cout << "\n";
+        cout << "========================================================================\n";
+        cout << "         CONTROLEUR DE QUALITE DE L'AIR INTERIEUR - CO2               \n";
+        cout << "========================================================================\n\n";
+        
         cout << "Nombre de registres lus : " << erreurModbus << "\n\n";
         
-        cout << "Indice | Adresse | Valeur lue\n";
-        cout << "-------|---------|------------\n";
+        cout << "--- DONNEES BRUTES ---\n";
+        cout << "+--------+----------+--------------+\n";
+        cout << "| Indice | Adresse  | Valeur brute |\n";
+        cout << "+--------+----------+--------------+\n";
         for (int i = 0; i < 4; i++) {
-            cout << "   " << i << "   |  0x" << hex << (0x0B + i) << dec << "  |   " << tab_reg[i] << "\n";
+            cout << "|   " << i << "    |  0x" << hex << (0x0B + i) << dec << "   |     " << tab_reg[i];
+            if (tab_reg[i] < 1000) cout << " ";
+            if (tab_reg[i] < 100) cout << " ";
+            if (tab_reg[i] < 10) cout << " ";
+            cout << "     |\n";
         }
+        cout << "+--------+----------+--------------+\n\n";
+        
+        cout << "--- INTERPRETATION DES DONNEES ---\n\n";
+        
+        cout << "Registre 0x0B (tab_reg[0]) = " << tab_reg[0] << "\n";
+        cout << "  -> Description : Donnee du registre 11\n\n";
+        
+        cout << "Registre 0x0C (tab_reg[1]) = " << tab_reg[1] << "\n";
+        cout << "  -> Description : Donnee du registre 12\n\n";
+        
+        cout << "Registre 0x0D (tab_reg[2]) = " << tab_reg[2] << "\n";
+        cout << "  -> Description : Donnee du registre 13\n\n";
+        
+        cout << "Registre 0x0E (tab_reg[3]) = " << tab_reg[3] << "\n";
+        cout << "  -> Description : Donnee du registre 14\n\n";
+        
+        cout << "========================================================================\n";
+        cout << "Note : Consultez la documentation CO2Meter.pdf pour la signification\n";
+        cout << "       exacte des registres 0x0B a 0x0E\n";
+        cout << "========================================================================\n";
         
         modbus_close(modbusPasserelle);
         modbus_free(modbusPasserelle);
